@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:insert="~{components/metaHeader :: metaHeader}"></th:block>
+
+    <title>ДостоREAD - панель админстратора - просмотр книг</title>
+
+    <style>
+        .text-truncate-2-lines {
+            line-height: 1.5;
+            min-height: 3em;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .card {
+            margin: 0 auto;
+        }
+
+        #results {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        @media screen and (min-width: 770px) and (max-width: 992px) {
+            #results {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+        }
+
+        @media screen and (max-width: 769px) {
+            #results {
+                display: grid;
+                grid-template-columns: repeat(1, 1fr);
+                gap: 10px;
+            }
+
+            .card {
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div th:replace="~{components/navbar :: navbar}"></div>
+
+<h1 class="h1 text-center text-primary my-5">Просмотр книг</h1>
+
+<form action="#" method="get" th:action="@{/admin-panel/books/view}" class="col-10 mx-auto">
+    <div class="row justify-content-center my-1">
+        <div class="col-md-6">
+            <div class="search-container">
+                <input type="text" class="form-control search-input" id="search-input" name="searchQuery"
+                       placeholder="Поиск..." th:value="${searchQuery}">
+                <div class="d-flex align-items-center col-6 mx-auto my-2">
+                    <button class="btn btn-primary mx-1" type="submit">Найти</button>
+                    <a th:href="@{/admin-panel/books/view(page=0)}" class="btn btn-warning mx-1">Сбросить поиск</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="container mx-auto mt-4" id="results">
+    <div th:each="card : ${pageData.cards}">
+        <div class="card bg-primary" style="width: 18rem; height: 430px;">
+            <img th:src="*{card.coverUrl}" class="card-img-top" style="width: 150px; height: 250px; margin: 5px auto"
+                 alt="изображение книги">
+            <div class="card-body">
+                <h5 class="card-title text-light text-truncate-2-lines" th:text="*{card.title}"></h5>
+                <p class="card-text text-light" th:text="*{card.author}"></p>
+                <a th:href="@{/admin-panel/books/update(id=${card.id})}" class="btn btn-warning change-book">Изменить</a>
+                <a th:href="@{/admin-panel/books/delete(id=${card.id})}" class="btn btn-danger delete-book">Удалить</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:if="${!pageData.hasElements()}">
+    <p class="text-center text-primary">Книг не найдено</p>
+</div>
+
+<nav th:if="${pageData.hasElements()}">
+    <ul class="pagination justify-content-center my-5">
+        <li th:each="i : ${#numbers.sequence(0, pageData.totalPages - 1)}" class="page-item">
+            <a th:href="@{/admin-panel/books/view(searchQuery=${searchQuery}, page=${i})}"
+               th:class="${i == pageData.currentPage} ? 'active page-link' : 'page-link'"
+               th:text="${i + 1}">
+            </a>
+        </li>
+    </ul>
+</nav>
+
+<div th:replace="~{components/footer :: footer}"></div>
+</body>
+</html>

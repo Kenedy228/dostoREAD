@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head >
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="widht=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+            crossorigin="anonymous">
+    </script>
+
+    <title>Шапка сайта</title>
+</head>
+<body>
+<header th:fragment="navbar">
+    <nav class="navbar navbar-expand-lg bg-primary">
+        <div class="container-fluid">
+            <a th:href="@{~/}" class="navbar-brand ms-0 text-light">
+                <img th:src="@{~/assets/logo.svg}" alt="Логотип" width="60" height="60"/>
+                ДостоREAD
+            </a>
+            <button class="navbar-toggler border-light" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
+                    aria-label="Toggle navigation" style="color: white;">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-lg-end" id="navbarNavDropdown">
+                <ul class="navbar-nav text-center text-lg-start mb-2 me-0 mb-lg-0">
+                    <li class="nav-item">
+                        <a th:href="@{~/}" class="nav-link text-light">Главная</a>
+                    </li>
+                    <li class="nav-item">
+                        <a th:href="@{~/login}" sec:authorize="!isAuthenticated()" class="nav-link text-light">Вход в аккаунт</a>
+                    </li>
+                    <li class="nav-item">
+                        <a th:href="@{~/registration}" sec:authorize="!isAuthenticated()" class="nav-link text-light">Регистрация аккаунта</a>
+                    </li>
+                    <li class="nav-item">
+                        <a th:href="@{~/admin-panel}" sec:authorize="hasRole('ADMIN')" class="nav-link text-light">Панель администратора</a>
+                    </li>
+                    <li class="nav-item">
+                        <a th:href="@{~/all-books}" sec:authorize="hasRole('USER')" class="nav-link text-light">Книги</a>
+                    </li>
+                    <li class="nav-item">
+                        <a th:href="@{~/user-panel}" sec:authorize="hasRole('USER')" class="nav-link text-light">Панель пользователя</a>
+                    </li>
+                    <li class="nav-item">
+                        <a th:href="@{~/logout}" sec:authorize="isAuthenticated()" class="nav-link text-light">Выйти</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+</body>
+</html>

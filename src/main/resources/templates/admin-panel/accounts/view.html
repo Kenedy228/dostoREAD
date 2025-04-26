@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:insert="~{components/metaHeader :: metaHeader}"></th:block>
+
+    <title>ДостоREAD - панель админстратора - просмотр аккаунтов</title>
+</head>
+<body>
+
+<div th:replace="~{components/navbar :: navbar}"></div>
+
+<h1 class="h1 text-center text-primary my-5">Просмотр аккаунтов</h1>
+
+<a class="btn btn-primary mx-auto" th:href="@{/admin-panel/accounts/create}">Создать аккаунт</a>
+
+<div class="container mx-auto mt-4">
+    <table class="table">
+        <tr>
+            <th scope="col">Имя пользователя</th>
+            <th scope="col">Статус аккаунта</th>
+            <th scope="col"></th>
+        </tr>
+        <tr th:each="acc : ${accounts}">
+            <td th:text="${acc.username}"></td>
+            <td th:text="${acc.isEnabled() ? 'Доступен' : 'Заблокирован'}"></td>
+            <td th:if="${acc.isEnabled()}"><a class="btn btn-primary" th:href="@{/admin-panel/accounts/disable(userID=${acc.id})}">Заблокировать</a></td>
+            <td th:if="${!acc.isEnabled()}"><a class="btn btn-primary" th:href="@{/admin-panel/accounts/enable(userID=${acc.id})}">Разблокировать</a></td>
+        </tr>
+    </table>
+</div>
+
+<div th:replace="~{components/footer :: footer}"></div>
+</body>
+</html>

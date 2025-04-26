@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:insert="~{components/metaHeader :: metaHeader}"></th:block>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+
+    <title>ДостоREAD - добавление книги</title>
+
+    <style>
+        .book-file, .book-cover {
+            border: 2px solid rgba(var(--bs-primary-rgb), var(--bs-text-opacity)) !important;
+            padding: 5px;
+            border-radius: 5px;
+        }
+
+        .book-file:hover, .book-cover:hover {
+            border: 2px solid #fff;
+            background: rgba(var(--bs-primary-rgb), var(--bs-text-opacity)) !important;
+            color: #fff !important;
+            transition: ease 0.7s;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div th:replace="~{components/navbar :: navbar}"></div>
+
+<section class="container">
+    <h1 class="h1 text-primary my-5 text-center">Добавление книги</h1>
+    <form class="needs-validation" action="#" th:action="@{/admin-panel/books/create}" th:object="${bookDto}"
+          method="post" enctype="multipart/form-data" novalidate>
+        <div th:if="${#fields.hasGlobalErrors()}">
+            <p th:each="err : ${#fields.globalErrors()}" th:text="${err}" class="text-danger pt-3 text-center"></p>
+        </div>
+        <div class="form-group pb-3">
+            <label for="title" class="text-primary">Название</label>
+            <input th:field="*{title}" th:value="*{title}" type="text" class="form-control text-primary" id="title">
+            <div th:if="${#fields.hasErrors('title')}">
+                <p th:each="err : ${#fields.errors('title')}" th:text="${err}" class="text-danger pt-3"></p>
+            </div>
+        </div>
+        <div class="form-group pb-3">
+            <label for="author" class="text-primary">Автор</label>
+            <input th:field="*{author}" th:value="*{author}" type="text" class="form-control text-primary" id="author"
+                   required>
+            <div th:if="${#fields.hasErrors('author')}">
+                <p th:each="err : ${#fields.errors('author')}" th:text="${err}" class="text-danger pt-3"></p>
+            </div>
+        </div>
+        <div class="form-group pb-3" data-checkbox-group="selectedGenreIds">
+            <p class="text-start text-primary">Жанры</p>
+            <div class="form-check form-check-inline pb-3" th:each="genre : ${genresNames}">
+                <input type="checkbox" class="form-check-input" th:id="${'checkbox' + genre}" th:value="${genre}"
+                       th:field="*{genresList}">
+                <label class="form-check-label text-primary" th:for="${'checkbox' + genre}" th:text="${genre}"></label>
+            </div>
+            <div th:if="${#fields.hasErrors('genresList')}">
+                <p th:each="err : ${#fields.errors('genresList')}" th:text="${err}" class="text-danger pt-3"></p>
+            </div>
+        </div>
+        <div class="form-group pb-3">
+            <p class="text-start text-primary">Файл книги (формат EPUB)</p>
+            <label for="bookFile" class="text-primary book-file">Выбрать файл</label>
+            <p class="d-md-inline text-primary" id="upload-book-text"></p>
+            <input type="file" id="bookFile" name="bookFile" class="form-control-file" th:field="*{bookFile}" th:value="*{bookFile}" accept=".epub"
+                   style="display: none;">
+            <div th:if="${#fields.hasErrors('bookFile')}">
+                <p th:each="err : ${#fields.errors('bookFile')}" th:text="${err}" class="text-danger pt-3"></p>
+            </div>
+        </div>
+        <div class="form-group pb-3">
+            <p class="text-start text-primary">Обложка книги (форматы png, jpg, jpeg)</p>
+            <label for="bookCover" class="text-primary book-cover">Выбрать файл</label>
+            <p class="d-md-inline text-primary" id="upload-cover-text"></p>
+            <input type="file" id="bookCover" name="bookCover" class="form-control-file" th:field="*{coverFile}" th:value="*{coverFile}" accept=".png,.jpg,.jpeg"
+                   style="display: none;">
+            <div th:if="${#fields.hasErrors('coverFile')}">
+                <p th:each="err : ${#fields.errors('coverFile')}" th:text="${err}" class="text-danger pt-3"></p>
+            </div>
+        </div>
+        <div class="form-group pb-3">
+            <label for="description" class="text-primary">Описание книги</label>
+            <textarea th:field="*{description}" class="form-control text-primary" id="description" rows="3"></textarea>
+            <div th:if="${#fields.hasErrors('description')}">
+                <p th:each="err : ${#fields.errors('description')}" th:text="${err}" class="text-danger pt-3"></p>
+            </div>
+        </div>
+        <div class="form-group pb-3">
+            <label for="ageRestriction" class="text-primary">Возрастное ограничение</label>
+            <select th:field="*{ageRestriction}" id="ageRestriction" class="form-control text-primary">
+                <option th:each="restriction : ${T(com.example.demo.Core.Book.Utilities.AgeRestrictions.AgeRestriction).values()}"
+                        th:value="${restriction.name()}"
+                        th:text="${restriction.code}">
+                </option>
+            </select>
+            <div th:if="${#fields.hasErrors('ageRestriction')}">
+                <p th:each="err : ${#fields.errors('ageRestriction')}" th:text="${err}" class="text-danger pt-3"></p>
+            </div>
+        </div>
+        <div class="form-group pb-3">
+            <label for="license" class="text-primary">Лицензия</label>
+            <input th:field="*{license}" type="text" class="form-control text-primary" id="license">
+            <div th:if="${#fields.hasErrors('license')}">
+                <p th:each="err : ${#fields.errors('license')}" th:text="${err}" class="text-danger pt-3"></p>
+            </div>
+        </div>
+        <div class="form-group pb-3">
+            <label for="publisher" class="text-primary">Издательство</label>
+            <input th:field="*{publisher}" type="text" class="form-control text-primary" id="publisher">
+            <div th:if="${#fields.hasErrors('publisher')}">
+                <p th:each="err : ${#fields.errors('publisher')}" th:text="${err}" class="text-danger pt-3"></p>
+            </div>
+        </div>
+        <div class="form-group pb-3">
+            <label for="publishedDate" class="text-primary">Дата публикования</label>
+            <input th:field="*{publishDate}" type="text" class="form-control text-primary" id="publishedDate">
+            <div th:if="${#fields.hasErrors('publishDate')}">
+                <p th:each="err : ${#fields.errors('publishDate')}" th:text="${err}" class="text-danger pt-3"></p>
+            </div>
+        </div>
+        <div class="form-group pb-3">
+            <label for="pageCount" class="text-primary">Количество страниц</label>
+            <input th:field="*{pageCount}" type="number" class="form-control text-primary" id="pageCount">
+            <div th:if="${#fields.hasErrors('pageCount')}">
+                <p th:each="err : ${#fields.errors('pageCount')}" th:text="${err}" class="text-danger pt-3"></p>
+            </div>
+        </div>
+        <div class="d-grid col-6 mx-auto">
+            <button type="submit" class="btn btn-primary my-5">Добавить</button>
+        </div>
+    </form>
+</section>
+
+<div th:replace="~{components/footer :: footer}"></div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.ru.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#publishedDate').datepicker({
+            format: 'dd.mm.yyyy',
+            autoclose: true,
+            todayHighlight: true,
+            endDate: '0d',
+            language: 'ru'
+        });
+    });
+</script>
+
+<script th:src="@{~/scripts/uploadFile.js}"></script>
+
+</body>
+</html>

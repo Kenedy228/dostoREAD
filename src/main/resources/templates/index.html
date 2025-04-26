@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:insert="~{components/metaHeader :: metaHeader}"></th:block>
+
+    <title>ДостоREAD - главная страница</title>
+</head>
+
+<body>
+<div th:replace="~{components/navbar :: navbar}"></div>
+<section class="container">
+    <h1 class="h1 text-center text-primary my-5">ДостоRead - онлайн платформа для чтения</h1>
+    <div class="container-md bg-primary">
+        <p class="fs-5 text-start px-4 py-4 my-0 text-light">"ДостоRead" — это онлайн-платформа для чтения и управления
+            электронными книгами, разработанная в MVC архитектуре на Spring Boot. Разработали студенты группы БО231ИСТ Журавлев Д.В. и Наумов С.А.</p>
+        <p class="fs-5 text-center py-4 text-light">Основные функции проекта</p>
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-4 mb-2">
+                                <div class="d-flex align-items-start">
+                                    <img src="assets/goal.png" alt="Иконка галочки" class="img-fluid mx-0"
+                                         style="width: 60px; height: 60px;">
+                                    <p class="fs-5 text-start py-2 ps-2 m-0 text-light">Загрузка и хранение книг в формате EPUB</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <div class="d-flex align-items-start">
+                                    <img src="assets/goal.png" alt="Иконка галочки" class="img-fluid mx-0"
+                                         style="width: 60px; height: 60px;">
+                                    <p class="fs-5 text-start py-2 ps-2 m-0 text-light">Авторизация и аутентификация
+                                        пользователей на основе ролей</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <div class="d-flex align-items-start">
+                                    <img src="assets/goal.png" alt="Иконка галочки" class="img-fluid mx-0"
+                                         style="width: 60px; height: 60px;">
+                                    <p class="fs-5 text-start py-2 ps-2 m-0 text-light">Просмотр и чтение книг с синхронизацией прогресса чтения</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div th:replace="~{components/footer :: footer}"></div>
+
+</body>
+</html>

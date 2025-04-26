@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:insert="~{components/metaHeader :: metaHeader}"></th:block>
+
+    <title>ДостоREAD - панель пользователя</title>
+</head>
+<body>
+
+<div th:replace="~{components/navbar :: navbar}"></div>
+
+<h1 class="h1 text-center text-primary my-5">Информация о книге</h1>
+
+
+<div class="d-md-flex align-items-center container-fluid" th:object="${book}">
+    <div class="col-md-3 mb-3">
+        <img th:src="${cover}" alt="Обложка книги" class="d-block mx-auto my-auto">
+    </div>
+    <div>
+        <p class="text-justify text-primary" th:text="'Название: ' + *{title}"></p>
+        <p class="text-justify text-primary" th:text="'Автор: ' + *{author}">Автор книги</p>
+        <p class="text-justify text-primary" th:text="*{description}"></p>
+        <p class="text-justify text-primary">Жанры:</p>
+        <div class="d-flex align-items-start">
+            <p th:each="genre : *{genres}" th:text="${genre.name}"
+               class="bg-light border border-primary me-2 p-2 text-primary rounded"></p>
+        </div>
+        <p class="text-justify text-primary" th:text="'Ограничение по возрасту: ' + *{ageRestriction.code}"></p>
+        <p class="text-justify text-primary" th:text="'Количество страниц: ' + *{pageCount}"></p>
+        <p class="text-justify text-primary" th:text="'Лицензия: ' + *{license}">Лицензия книги</p>
+        <p class="text-justify text-primary" th:text="'Дата публикования: ' + *{publishDate}">Дата публикования</p>
+        <p class="text-justify text-primary" th:text="'Издательство: ' + *{publisher}">Издательство</p>
+        <a class="btn btn-primary" th:href="@{/read-book(bookID = ${book.id}, page = ${page}, screen = ${screen})}">Читать</a>
+    </div>
+</div>
+
+<div th:replace="~{components/footer :: footer}"></div>
+
+</body>
+</html>

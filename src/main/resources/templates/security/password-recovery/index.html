@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:insert="~{components/metaHeader :: metaHeader}"></th:block>
+
+    <title>ДостоREAD - сброс пароля</title>
+</head>
+<body>
+
+<div th:replace="~{components/navbar :: navbar}"></div>
+
+<h1 class="h1 text-center text-primary my-5">Сброс пароля</h1>
+
+<form class="bg-primary col-10 mx-auto rounded" novalidate method="post" th:action="@{/password-recovery}"
+      th:object="${passwordRecovery}">
+    <div class="mb-3 pt-3 mx-3">
+        <label for="email" class="form-label text-light">Электронная почта</label>
+        <input type="email" name="email" id="email" class="form-control text-primary" th:field="*{email}"
+               th:value="*{email}">
+        <div th:if="${#fields.hasErrors('email')}">
+            <p th:each="err : ${#fields.errors('email')}" th:text="${err}" class="text-danger pt-3"></p>
+        </div>
+    </div>
+    <div class="pb-3 d-grid col-4 mx-auto">
+        <button class="btn btn-light text-primary" type="submit">Далее</button>
+    </div>
+</form>
+
+<div th:replace="~{components/footer :: footer}"></div>
+
+</body>
+</html>

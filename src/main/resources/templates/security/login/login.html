@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:insert="~{components/metaHeader :: metaHeader}"></th:block>
+
+
+    <title>ДостоREAD - вход в аккаунт</title>
+</head>
+<body>
+
+<div th:replace="~{components/navbar :: navbar}"></div>
+
+<h1 class="h1 text-center text-primary my-5">Вход в систему</h1>
+
+
+<form class="bg-primary col-10 mx-auto rounded" method="post" th:action="@{/login}"
+      th:object="${login}">
+    <div th:if="${#fields.hasGlobalErrors()}">
+        <p th:each="err : ${#fields.globalErrors()}" th:text="${err}" class="text-danger pt-3 text-center"></p>
+    </div>
+    <div class="mb-3 pt-3 mx-3">
+        <label for="username" class="form-label text-light">Имя пользователя</label>
+        <input type="text" name="username" id="username" class="form-control text-primary" th:field="*{username}"
+               th:value="*{username}">
+        <div th:if="${#fields.hasErrors('username')}">
+            <p th:each="err : ${#fields.errors('username')}" th:text="${err}" class="text-danger pt-3"></p>
+        </div>
+    </div>
+    <div class="mb-3 mx-3">
+        <label for="password" class="form-label text-light">Пароль</label>
+        <input type="password" name="password" id="password" class="form-control text-primary" th:field="*{rawPassword}"
+               th:value="*{rawPassword}">
+        <div th:if="${#fields.hasErrors('rawPassword')}">
+            <p th:each="err : ${#fields.errors('rawPassword')}" th:text="${err}" class="text-danger pt-3"></p>
+        </div>
+    </div>
+    <div class="mb-3 mx-3">
+        <p><a th:href="@{/password-recovery}" class="text-light">Забыли пароль?</a></p>
+    </div>
+    <div class="mb-3 mx-3">
+        <div class="d-flex align-items-start">
+            <img th:src="@{/assets/hide.png}" alt="изображение показать пароль" id="show_hide_password"
+                 class="img-fluid mx-0 hide" style="width: 30px; height: 30px;">
+            <p class="text-light ms-3">Показать пароль</p>
+        </div>
+    </div>
+    <div class="pb-3 d-grid col-4 mx-auto">
+        <button class="btn btn-light text-primary" type="submit">Войти</button>
+    </div>
+</form>
+
+<p class="text-primary text-center mt-3">Нет аккаунта? <a th:href="@{/registration}"
+                                                          class="text-primary">Зарегистрировать аккаунт</a></p>
+
+<div th:replace="~{components/footer :: footer}"></div>
+
+<script th:src="@{~/scripts/toggleVisibilityPassword.js}"></script>
+
+</body>
+</html>

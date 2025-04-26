@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:insert="~{components/metaHeader :: metaHeader}"></th:block>
+
+    <title>ДостоREAD - добавление администратора</title>
+</head>
+<body>
+
+<div th:replace="~{components/navbar :: navbar}"></div>
+
+<section class="container">
+    <h1 class="h1 text-primary my-5 text-center">Добавление администратора</h1>
+    <form class="needs-validation bg-primary" action="#" th:action="@{/admin-panel/accounts/create}" th:object="${userCreateDTO}"
+          method="post" novalidate>
+        <div class="mb-3 pt-3 mx-3">
+            <label for="username" class="text-light">Имя администратора</label>
+            <input th:field="*{username}" type="text" class="form-control text-primary" id="username">
+            <div th:if="${#fields.hasErrors('username')}">
+                <p th:each="err : ${#fields.errors('username')}" th:text="${err}" class="text-danger pt-3"></p>
+            </div>
+        </div>
+        <div class="mb-3 pt-3 mx-3">
+            <label for="password" class="form-label text-light">Пароль <br>(Пароль должен содержать минимум 1 заглавную латинскую букву, минимум 1 строчную латинскую букву, минимум 1 специальный символ и минимум 1 цифру, длина пароля от 8 до 14 символов)</label>
+            <input th:field="*{rawPassword}" type="password" class="form-control text-primary" id="password">
+            <div th:if="${#fields.hasErrors('rawPassword')}">
+                <p th:each="err : ${#fields.errors('rawPassword')}" th:text="${err}" class="text-danger pt-3"></p>
+            </div>
+        </div>
+        <div class="mb-3 mx-3">
+            <div class="d-flex align-items-start">
+                <img th:src="@{/assets/show.png}" alt="изображение показать пароль" id="show_hide_password" class="img-fluid mx-0 hide" style="width: 30px; height: 30px;">
+                <p class="text-light ms-3">Показать пароль</p>
+            </div>
+        </div>
+        <div class="d-grid col-6 mx-auto">
+            <button type="submit" class="btn btn-light text-primary my-3">Создать</button>
+        </div>
+    </form>
+</section>
+
+<div th:replace="~{components/footer :: footer}"></div>
+
+<script th:src="@{~/scripts/toggleVisibilityPassword.js}"></script>
+
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:insert="~{components/metaHeader :: metaHeader}"></th:block>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+
+    <title>ДостоREAD - изменение книги</title>
+
+    <style>
+        .book-file, .book-cover {
+            border: 2px solid rgba(var(--bs-primary-rgb), var(--bs-text-opacity)) !important;
+            padding: 5px;
+            border-radius: 5px;
+        }
+
+        .book-file:hover, .book-cover:hover {
+            border: 2px solid #fff;
+            background: rgba(var(--bs-primary-rgb), var(--bs-text-opacity)) !important;
+            color: #fff !important;
+            transition: ease 0.7s;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div th:replace="~{components/navbar :: navbar}"></div>
+
+<section class="container">
+    <h1 class="h1 text-primary my-5 text-center">Изменение книги</h1>
+    <button class="btn btn-primary btn-lg col-12 toggleVisibility">Показать текущие данные книги</button>
+    <div class="old-book hide" style="display: none;" th:object="${book}">
+        <p class="text-start text-primary my-3" th:text="*{'Название: ' + title}"></p>
+        <p class="text-start text-primary my-3" th:text="*{'Автор: ' + author}"></p>
+        <p class="text-start text-primary my-3">Жанры</p>
+        <div class="d-flex align-items-start">
+            <p th:each="genre : *{genres}" th:text="${genre.name}"
+               class="bg-light border border-primary me-2 p-2 text-primary rounded"></p>
+        </div>
+        <a class="bg-primary my-3 p-2 text-light rounded link-underline link-underline-opacity-0"
+           >Просмотреть книгу</a>
+        <a class="bg-primary my-3 p-2 text-light rounded link-underline link-underline-opacity-0"
+           th:href="${pathToCover}">Просмотреть обложку книги</a>
+        <p class="text-start text-primary my-3" th:text="*{'Описание книги: ' + description}"></p>
+        <p class="text-start text-primary my-3" th:text="*{'Возрастное ограничение: ' + ageRestriction.code}"></p>
+        <p class="text-start text-primary my-3" th:text="*{'Лицензия: ' + license}"></p>
+        <p class="text-start text-primary my-3" th:text="*{'Издательство: ' + publisher}"></p>
+        <p class="text-start text-primary" th:text="*{'Дата публикования: ' + publishDate}"></p>
+    </div>
+
+</section>
+
+<section class="container">
+    <h3 class="h3 text-primary my-5 text-center">Новые данные книги</h3>
+    <p class="text-primary mb-5 text-center">Если соответствующую информацию не нужно менять, оставьте поле для ввода
+        пустым</p>
+    <form class="needs-validation"  action="#" th:object="${bookDto}" th:action="@{/admin-panel/books/update(bookID=${targetId})}"
+          method="post" enctype="multipart/form-data" novalidate>
+        <div class="form-group pb-3">
+            <label for="title" class="text-primary">Название</label>
+            <input type="text" class="form-control text-primary" id="title" th:field="*{title}">
+        </div>
+        <div class="form-group pb-3">
+            <label for="author" class="text-primary">Автор</label>
+            <input type="text" class="form-control text-primary" id="author" th:field="*{author}">
+        </div>
+        <div class="form-group pb-3" data-checkbox-group="selectedGenreIds">
+            <p class="text-start text-primary">Жанры</p>
+            <div class="form-check form-check-inline pb-3" th:each="genre : ${genresNames}">
+                <input type="checkbox" class="form-check-input" th:id="${'checkbox' + genre}" th:value="${genre}"
+                       th:field="*{genresList}">
+                <label class="form-check-label text-primary" th:for="${'checkbox' + genre}" th:text="${genre}"></label>
+            </div>
+        </div>
+        <div class="form-group pb-3">
+            <p class="text-start text-primary">Файл книги (формат EPUB)</p>
+            <label for="bookFile" class="text-primary book-file">Выбрать файл</label>
+            <p class="d-md-inline text-primary" id="upload-book-text"></p>
+            <input type="file" id="bookFile" name="bookFile" th:field="*{bookFile}" th:value="*{bookFile}" class="form-control-file" accept=".epub"
+                   style="display: none;">
+        </div>
+        <div class="form-group pb-3">
+            <p class="text-start text-primary">Обложка книги (форматы png, jpg, jpeg)</p>
+            <label for="bookCover" class="text-primary book-cover">Выбрать файл</label>
+            <p class="d-md-inline text-primary" id="upload-cover-text"></p>
+            <input type="file" id="bookCover" name="bookCover" th:field="*{coverFile}" th:value="*{coverFile}" class="form-control-file" accept=".png,.jpg,.jpeg"
+                   style="display: none;">
+        </div>
+        <div class="form-group pb-3">
+            <label for="description" class="text-primary">Описание книги</label>
+            <textarea class="form-control text-primary" id="description" rows="3" th:field="*{description}"></textarea>
+        </div>
+        <div class="form-group pb-3">
+            <label for="ageRestriction" class="text-primary">Возрастное ограничение</label>
+            <select id="ageRestriction" class="form-control text-primary" th:field="*{ageRestriction}">
+                <option th:each="restriction : ${T(com.example.demo.Core.Book.Utilities.AgeRestrictions.AgeRestriction).values()}"
+                        th:value="${restriction.name()}"
+                        th:text="${restriction.code}">
+                </option>
+            </select>
+        </div>
+        <div class="form-group pb-3">
+            <label for="license" class="text-primary">Лицензия</label>
+            <input type="text" class="form-control text-primary" id="license" th:field="*{license}">
+        </div>
+        <div class="form-group pb-3">
+            <label for="publisher" class="text-primary">Издательство</label>
+            <input type="text" class="form-control text-primary" id="publisher" th:field="*{publisher}">
+        </div>
+        <div class="form-group">
+            <label for="publishedDate" class="text-primary">Дата публикования</label>
+            <input type="text" class="form-control text-primary" id="publishedDate" th:field="*{publishDate}">
+        </div>
+        <div class="form-group">
+            <label for="pageCount" class="text-primary">Количество страниц</label>
+            <input th:field="*{pageCount}" type="number" class="form-control text-primary" id="pageCount">
+        </div>
+        <div class="d-grid col-6 mx-auto">
+            <button type="submit" class="btn btn-primary my-5">Добавить</button>
+        </div>
+    </form>
+</section>
+
+<div th:replace="~{components/footer :: footer}"></div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.ru.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#publishedDate').datepicker({
+            format: 'dd.mm.yyyy',
+            autoclose: true,
+            todayHighlight: true,
+            endDate: '0d',
+            language: 'ru'
+        });
+    });
+</script>
+
+<script th:src="@{~/scripts/toggleVisibilityBookForm.js}"></script>
+<script th:src="@{~/scripts/uploadFile.js}"></script>
+</body>
+</html>

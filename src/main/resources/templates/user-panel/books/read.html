@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block th:insert="~{components/metaHeader :: metaHeader}"></th:block>
+
+  <title>ДостоREAD - чтение книги</title>
+
+  <style>
+    .page-line {
+      margin-bottom: 0.8em;
+    }
+
+    .page-content {
+      width: 750px;
+      line-height: 1.6;
+      font-family: Arial, sans-serif;
+      height: 700px;
+    }
+
+    .text {
+      text-align: justify;
+      width: 100%;
+      hyphens: auto;
+      text-indent: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="settings container-fluid bg-primary">
+  <div class="d-md-flex justify-content-between my-3">
+    <div class="d-md-flex justify-content-between">
+      <p class="text-light my-auto pe-1">Шрифт</p>
+      <a th:class="'btn me-1 ' + ${font == 'Arial' ? 'btn-success' : 'btn-light'}" th:href="@{/read-book(bookID = ${bookID}, page=${currentPage}, font = 'Arial', screen = ${screen.ordinal()})}">Arial</a>
+      <a th:class="'btn me-1 ' + ${font == 'Times New Roman' ? 'btn-success' : 'btn-light'}" th:href="@{/read-book(bookID = ${bookID}, page=${currentPage}, font = 'Times New Roman', screen = ${screen.ordinal()})}">Times New Roman</a>
+    </div>
+    <div class="d-md-flex">
+      <p class="text-light my-auto pe-1">Размер текста</p>
+      <a th:class="'btn me-1 ' + ${screen.ordinal() == 0 ? 'btn-success' : 'btn-light'}" th:href="@{/read-book(bookID = ${bookID}, page=${currentPage}, font = ${font}, screen = '0')}">Стандартный</a>
+      <a th:class="'btn me-1 ' + ${screen.ordinal() == 1 ? 'btn-success' : 'btn-light'}" th:href="@{/read-book(bookID = ${bookID}, page=${currentPage}, font = ${font}, screen = '1')}">Большой</a>
+    </div>
+    <div class="d-md-flex">
+      <a class="btn btn-light" th:href="@{/read-book/exit(bookID = ${bookID}, page = ${currentPage}, screen = ${screen.ordinal()})}">Выход</a>
+    </div>
+  </div>
+</div>
+
+<div class="page-content mx-auto my-3" th:style="'font-family: ' + ${font} + '; font-size: ' + ${screen.ordinal() == 0 ? '16px;' : '24px'}">
+  <div th:each="line : ${bookPage}" class="page-line my-0">
+    <p lang="ru" th:text="${line}" class="text my-0"></p>
+  </div>
+</div>
+
+<div class="pagination mx-auto my-3">
+  <a class="btn btn-primary" th:if="${currentPage > 0}"
+     th:href="@{/read-book(bookID = ${bookID}, page=${currentPage - 1}, font = ${font}, screen = ${screen.ordinal()})}">Предыдущая</a>
+
+  <p class="text-primary my-auto mx-2" th:text="'Страница ' + ${currentPage + 1} + ' из ' + ${totalPages}"></p>
+
+  <a class="btn btn-primary" th:if="${currentPage < totalPages - 1}"
+     th:href="@{/read-book(bookID = ${bookID}, page=${currentPage + 1}, font = ${font}, screen = ${screen.ordinal()})}">Следующая</a>
+</div>
+
+<div th:replace="~{components/footer :: footer}"></div>
+
+</body>
+</html>
