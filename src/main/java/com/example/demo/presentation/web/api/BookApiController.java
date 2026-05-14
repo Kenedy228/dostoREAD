@@ -15,7 +15,6 @@ import com.example.demo.presentation.web.viewmodel.ReadingPositionViewModel;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -103,9 +102,8 @@ public class BookApiController {
     }
 
     @PostMapping("/admin/books")
-    public ResponseEntity<ApiResponse<Void>> create(@ModelAttribute BookForm form) throws Exception {
-        BindingResult bindingResult = new BeanPropertyBindingResult(form, "book");
-        bookValidator.validate(form, bindingResult);
+    public ResponseEntity<ApiResponse<Void>> create(@ModelAttribute BookForm form, BindingResult bindingResult) throws Exception {
+        bookValidator.validateForCreate(form, bindingResult);
 
         if (bindingResult.hasErrors()) {
             return ResponseEntity.badRequest().body(ApiResponse.fail(ApiValidation.errors(bindingResult)));
@@ -116,9 +114,15 @@ public class BookApiController {
     }
 
     @PutMapping("/admin/books/{id}")
-    public ApiResponse<Void> update(@PathVariable int id, @ModelAttribute BookForm form) throws Exception {
+    public ResponseEntity<ApiResponse<Void>> update(@PathVariable int id, @ModelAttribute BookForm form, BindingResult bindingResult) throws Exception {
+        bookValidator.validateForUpdate(id, form, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest().body(ApiResponse.fail(ApiValidation.errors(bindingResult)));
+        }
+
         bookService.update(id, toCommand(form));
-        return ApiResponse.ok(null);
+        return ResponseEntity.ok(ApiResponse.ok(null));
     }
 
     @DeleteMapping("/admin/books/{id}")

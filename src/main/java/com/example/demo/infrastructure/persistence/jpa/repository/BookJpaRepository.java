@@ -4,6 +4,7 @@ import com.example.demo.infrastructure.persistence.jpa.entity.BookEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
 public interface BookJpaRepository extends JpaRepository<BookEntity, Integer> {
     List<BookEntity> findAll();
 
+    @EntityGraph(attributePaths = "genres")
     BookEntity findBookById(int id);
 
     BookEntity findBookByAuthorAndTitle(String author, String title);

@@ -5,7 +5,7 @@ import com.example.demo.infrastructure.persistence.jpa.entity.UserEntity;
 import com.example.demo.infrastructure.persistence.jpa.repository.UserJpaRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,17 +18,21 @@ public class UserApplicationService {
     @Autowired
     private final UserJpaRepository userRepository;
 
-    private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+    private final PasswordEncoder passwordEncoder;
 
     public UserEntity create(String username, String email, String rawPassword, String role) {
         UserEntity user = new UserEntity();
 
         user.setUsername(username);
         user.setEmail(email);
-        user.setPassword(bCryptPasswordEncoder.encode(rawPassword));
+        user.setPassword(passwordEncoder.encode(rawPassword));
         user.setRole(role);
 
         return userRepository.save(user);
+    }
+
+    public String encodePassword(String rawPassword) {
+        return passwordEncoder.encode(rawPassword);
     }
 
     public UserEntity findUserByUsernameAndPassword(String username, String password) {
@@ -43,7 +47,7 @@ public class UserApplicationService {
         UserEntity user = userRepository.findUserByUsername(username);
 
         return user != null
-                && bCryptPasswordEncoder.matches(rawPassword, user.getPassword())
+                && passwordEncoder.matches(rawPassword, user.getPassword())
                 && user.isEnabled();
     }
 
@@ -64,7 +68,7 @@ public class UserApplicationService {
     public UserEntity updatePasswordByEmail(String email, String password) {
         UserEntity user = userRepository.findUserByEmail(email);
 
-        user.setPassword(bCryptPasswordEncoder.encode(password));
+        user.setPassword(passwordEncoder.encode(password));
 
         return userRepository.save(user);
     }

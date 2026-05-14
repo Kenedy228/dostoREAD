@@ -60,7 +60,7 @@
     {#if protectedView("ADMIN", "ok") === "ok"}<AdminAccounts />{:else if protectedView("ADMIN", "ok") === "login"}<Auth mode="login" />{:else}<Forbidden />{/if}
   {:else}
     <section class="container py-16">
-      <div class="panel rounded-[2rem] p-10 text-center">
+      <div class="panel rounded-4xl p-10 text-center">
         <h1 class="section-title">Страница не найдена</h1>
         <button class="btn btn-primary mt-6" on:click={() => navigate("/")}>На главную</button>
       </div>

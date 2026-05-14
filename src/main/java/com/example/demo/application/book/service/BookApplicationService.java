@@ -89,21 +89,23 @@ public class BookApplicationService {
         return bookRepository.save(book);
     }
 
+    @Transactional
     public BookEntity update(int bookID, BookCommand bookDto) throws Exception {
         return update(bookID, bookDto, genreService.getGenresByNames(bookDto.genresList()));
     }
 
+    @Transactional
     public BookEntity update(int bookID, BookCommand bookDto, List<GenreEntity> genres) throws Exception {
         BookEntity book = bookRepository.findBookById(bookID);
 
         String pathToBook = "";
         String pathToCover = "";
 
-        if (!bookDto.bookFile().isEmpty()) {
+        if (bookDto.bookFile() != null && !bookDto.bookFile().isEmpty()) {
             pathToBook = miniIO.uploadFile(StorageBucket.BOOK.getSource(), bookDto.bookFile());
         }
 
-        if (!bookDto.coverFile().isEmpty()) {
+        if (bookDto.coverFile() != null && !bookDto.coverFile().isEmpty()) {
             pathToCover = miniIO.uploadFile(StorageBucket.COVERS.getSource(), bookDto.coverFile());
         }
 

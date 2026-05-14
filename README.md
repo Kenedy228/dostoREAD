@@ -1,62 +1,64 @@
 # dostoREAD
 
-dostoREAD is a Spring Boot web application for managing and reading EPUB books online. The backend keeps the Spring Boot stack and exposes JSON APIs, while the client is now a Svelte single-page application styled with Tailwind CSS.
+dostoREAD — это веб-приложение на Spring Boot для управления и онлайн-чтения EPUB-книг. Бэкенд сохраняет стек Spring Boot и предоставляет JSON API, а клиентская часть реализована как SPA на Svelte с использованием Tailwind CSS.
 
-## Tech Stack
-
+Технологический стек
 - Java 21
 - Spring Boot 3.4.4
 - Spring Web, Spring Security, Spring Data JPA
-- Svelte, Vite and Tailwind CSS
+- Svelte, Vite и Tailwind CSS
 - PostgreSQL
 - MinIO
 - Spring Mail
-- epublib and jsoup for EPUB/HTML parsing
+- epublib и jsoup для парсинга EPUB/HTML
 - Tailwind CSS
 - Docker Compose
 
-## Features
+## Возможности
+- Регистрация пользователей, вход, подтверждение email и восстановление пароля
+- Разделение на роли: администратор и читатель
+- Загрузка, обновление, удаление и поиск книг администратором
+- Хранение EPUB-файлов и обложек в MinIO
+- Интерфейс чтения с настройками шрифта и размера экрана
+- Сохранение прогресса чтения для каждого пользователя
+- Архитектура
 
-- User registration, login, email confirmation and password recovery
-- Role-based admin and reader areas
-- Admin book upload, update, delete and search
-- EPUB file and cover storage in MinIO
-- Reader view with font and screen-size options
-- Reading progress persistence per user
+## Проект организован по слоям в стиле DDD:
 
-## Architecture
-
-The project is organized by DDD-oriented layers:
-
-```txt
+```bash
 src/main/java/com/example/demo
-  domain/          pure business models, value objects, repository contracts
-  application/     use-case/application services, commands and transaction boundaries
-  infrastructure/  JPA entities/repositories, MinIO, mail, security, EPUB parsing, config
-  presentation/    REST API controllers, SPA fallback, forms, validators and view models
+domain/          чистые бизнес-модели, value objects, контракты репозиториев
+application/     use-case/сервисы приложения, команды и границы транзакций
+infrastructure/  JPA-сущности/репозитории, MinIO, почта, безопасность, парсинг EPUB, конфигурация
+presentation/    REST API контроллеры, SPA fallback, формы, валидаторы и view-модели
 ```
 
-Domain classes do not depend on Spring, JPA, HTTP, MinIO or frontend concerns. JPA entities are kept in `infrastructure.persistence.jpa.entity`, while API controllers live in `presentation.web.api`.
+Классы домена не зависят от Spring, JPA, HTTP, MinIO или фронтенда. JPA-сущности находятся в infrastructure.persistence.jpa.entity, а API-контроллеры — в presentation.web.api.
 
-## Svelte Client
+## Svelte клиент
 
-The old Thymeleaf templates were replaced with a Svelte/Vite SPA. The client source is in:
+Старые шаблоны Thymeleaf были заменены на SPA на Svelte/Vite. Исходники клиента находятся в:
 
-- `src/main/frontend`
-- `src/main/frontend/src/components`
-- `src/main/frontend/src/pages`
+```bash
+src/main/frontend
+src/main/frontend/src/components
+src/main/frontend/src/pages
+```
 
-The production build is written to:
+## Продакшн-сборка размещается в:
 
-- `src/main/resources/static/index.html`
-- `src/main/resources/static/assets`
+```bash
+src/main/resources/static/index.html
+src/main/resources/static/assets
+```
 
-Tailwind CSS is loaded through Vite from:
+## Tailwind CSS подключается через Vite из:
+```bash
+src/main/frontend/src/styles.css
+tailwind.config.js
+```
 
-- `src/main/frontend/src/styles.css`
-- `tailwind.config.js`
-
-Commands:
+## Команды:
 
 ```bash
 npm install
@@ -65,50 +67,78 @@ npm run build:css
 npm run watch:css
 ```
 
-`build:css` is kept as a compatibility script and runs the Vite production build.
+Скрипт build:css оставлен для совместимости и выполняет production-сборку через Vite.
 
-## Configuration
+## Конфигурация
 
-Configuration is environment-driven. Profiles:
+Конфигурация задаётся через переменные окружения. Профили:
 
-- `local` - default local development profile
-- `docker` - Docker Compose service names
-- `test` - test profile
+```bash
+local — локальная разработка по умолчанию
+docker — для Docker Compose
+test — для тестов
+```
 
-Copy `.env.example` to `.env` for Docker usage and replace placeholder secrets.
+## Основные переменные:
 
-Important variables:
+```bash
+DB_URL, DB_USERNAME, DB_PASSWORD
+MINIO_ENDPOINT, MINIO_ACCESS_KEY, MINIO_SECRET_KEY
+MAIL_HOST, MAIL_PORT, MAIL_USERNAME, MAIL_PASSWORD
+ADMIN_BOOTSTRAP_ENABLED, ADMIN_USERNAME, ADMIN_EMAIL, ADMIN_PASSWORD
+SPRING_SERVLET_MULTIPART_RESOLVE_LAZILY
+SPRING_SERVLET_MULTIPART_MAX_FILE_SIZE, SPRING_SERVLET_MULTIPART_MAX_REQUEST_SIZE
+SPRING_PROFILES_ACTIVE
+```
 
-- `DB_URL`, `DB_USERNAME`, `DB_PASSWORD`
-- `MINIO_ENDPOINT`, `MINIO_ACCESS_KEY`, `MINIO_SECRET_KEY`
-- `MAIL_HOST`, `MAIL_PORT`, `MAIL_USERNAME`, `MAIL_PASSWORD`
-- `SPRING_PROFILES_ACTIVE`
+При запуске приложение создаёт администратора, если ADMIN_BOOTSTRAP_ENABLED=true и пользователь с именем ADMIN_USERNAME отсутствует. Перед использованием в общей среде обязательно измените ADMIN_PASSWORD.
 
-## Docker Compose
+Ограничения загрузки:
 
-Local stack:
+- книги — до 20 МБ
+- обложки — до 10 МБ
 
-- `app` on port `8080`
-- `postgres` on port `5432`
-- `minio` API on `9000`, console on `9001`
-- `mailpit` SMTP on `1025`, UI on `8025`
+Клиент отображает эти ограничения рядом с полями загрузки и показывает понятное сообщение об ошибке при превышении лимита.
 
-Host ports are configurable through `.env`: `APP_PORT`, `POSTGRES_PORT`, `MINIO_API_PORT`, `MINIO_CONSOLE_PORT`, `MAILPIT_SMTP_PORT`, and `MAILPIT_UI_PORT`.
+Docker Compose
+
+Локальный стек:
+
+```bash
+app на порту 8080
+postgres на порту 5432
+minio API на 9000, консоль на 9001
+mailpit SMTP на 1025, UI на 8025
+```
+
+Порты можно настроить через .env:
+
+```bash
+APP_PORT
+POSTGRES_PORT
+MINIO_API_PORT
+MINIO_CONSOLE_PORT
+MAILPIT_SMTP_PORT
+MAILPIT_UI_PORT
+```
+
+## Запуск:
 
 ```bash
 cp .env.example .env
 docker compose up --build
 ```
 
-Validate compose syntax:
+Стандартные учётные данные администратора (если не переопределены):
 
 ```bash
-docker compose config
+username: admin
+password: Admin123!
 ```
 
-## Local Run Without Docker
+## Локальный запуск без Docker
 
-Start PostgreSQL and MinIO locally, configure environment variables, then run:
+Запустите PostgreSQL и MinIO локально, настройте переменные окружения, затем:
 
 ```bash
 npm install
@@ -116,23 +146,10 @@ npm run build
 ./mvnw spring-boot:run
 ```
 
-## Tests and Build
-
+Тесты и сборка
 ```bash
 ./mvnw test
 ./mvnw package
 ```
 
-Focused domain tests cover value object validation for book titles, email and reading progress.
-
-## What Was Improved
-
-- Introduced layered package structure: `domain`, `application`, `infrastructure`, `presentation`
-- Moved JPA entities and repositories to infrastructure
-- Moved controllers/forms/validators/view models to presentation
-- Added domain value objects and repository contracts
-- Externalized MinIO, database and mail settings
-- Replaced Thymeleaf templates with a Svelte SPA
-- Replaced Bootstrap UI with Tailwind-based Svelte components
-- Added Dockerfile, Docker Compose and `.env.example`
-- Updated `.gitignore`
+Фокусные тесты домена покрывают валидацию value objects: названия книг, email и прогресса чтения.

@@ -35,7 +35,7 @@ public class UpdateBookEntityBuilder {
             book.setDescription(description);
         }
 
-        if (!ageRestriction.equals(AgeRestriction.NOT_SELECTED)) {
+        if (ageRestriction != null && !ageRestriction.equals(AgeRestriction.NOT_SELECTED)) {
             book.setAgeRestriction(ageRestriction);
         }
 

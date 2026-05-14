@@ -13,5 +13,4 @@ logs/
 !.env.example
 
 README.md
-AGENTS.md
 src/main/java/com/example/demo/AGENTS.md

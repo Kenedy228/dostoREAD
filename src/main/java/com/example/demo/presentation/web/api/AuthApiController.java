@@ -46,9 +46,9 @@ public class AuthApiController {
     private final AuthenticationManager authenticationManager;
 
     @GetMapping("/session")
-    public SessionResponse session(Authentication authentication) {
+    public ApiResponse<SessionResponse> session(Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated() || "anonymousUser".equals(authentication.getPrincipal())) {
-            return new SessionResponse(false, null, null);
+            return ApiResponse.ok(new SessionResponse(false, null, null));
         }
 
         String role = authentication.getAuthorities().stream()
@@ -56,7 +56,7 @@ public class AuthApiController {
                 .map(authority -> authority.getAuthority().replace("ROLE_", ""))
                 .orElse(null);
 
-        return new SessionResponse(true, authentication.getName(), role);
+        return ApiResponse.ok(new SessionResponse(true, authentication.getName(), role));
     }
 
     @PostMapping("/login")
