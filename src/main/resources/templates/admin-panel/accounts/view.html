@@ -9,22 +9,22 @@
 
 <div th:replace="~{components/navbar :: navbar}"></div>
 
-<h1 class="h1 text-center text-primary my-5">Просмотр аккаунтов</h1>
+<h1 class="app-title">Просмотр аккаунтов</h1>
 
-<a class="btn btn-primary mx-auto" th:href="@{/admin-panel/accounts/create}">Создать аккаунт</a>
+<a class="app-button mx-auto" th:href="@{/admin-panel/accounts/create}">Создать аккаунт</a>
 
-<div class="container mx-auto mt-4">
-    <table class="table">
+<div class="app-book-grid">
+    <table class="min-w-full divide-y divide-slate-200">
         <tr>
             <th scope="col">Имя пользователя</th>
             <th scope="col">Статус аккаунта</th>
             <th scope="col"></th>
         </tr>
         <tr th:each="acc : ${accounts}">
-            <td th:text="${acc.username}"></td>
-            <td th:text="${acc.isEnabled() ? 'Доступен' : 'Заблокирован'}"></td>
-            <td th:if="${acc.isEnabled()}"><a class="btn btn-primary" th:href="@{/admin-panel/accounts/disable(userID=${acc.id})}">Заблокировать</a></td>
-            <td th:if="${!acc.isEnabled()}"><a class="btn btn-primary" th:href="@{/admin-panel/accounts/enable(userID=${acc.id})}">Разблокировать</a></td>
+            <td th:text="${acc.username()}"></td>
+            <td th:text="${acc.enabled() ? 'Доступен' : 'Заблокирован'}"></td>
+            <td th:if="${acc.enabled()}"><a class="app-button" th:href="@{/admin-panel/accounts/disable(userID=${acc.id()})}">Заблокировать</a></td>
+            <td th:if="${!acc.enabled()}"><a class="app-button" th:href="@{/admin-panel/accounts/enable(userID=${acc.id()})}">Разблокировать</a></td>
         </tr>
     </table>
 </div>

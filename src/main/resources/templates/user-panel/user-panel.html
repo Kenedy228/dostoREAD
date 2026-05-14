@@ -8,31 +8,31 @@
 
 <div th:replace="~{components/navbar :: navbar}"></div>
 
-<h1 class="h1 text-center text-primary my-5">Продолжить чтение</h1>
+<h1 class="app-title">Продолжить чтение</h1>
 
-<div class="container mx-auto mt-4" id="results">
+<div class="app-book-grid" id="results">
     <div th:each="card : ${pageData.cards}">
-        <div class="card bg-primary" style="width: 18rem; height: 430px;">
-            <img th:src="*{card.coverUrl}" class="card-img-top" style="width: 150px; height: 250px; margin: 5px auto"
+        <div class="app-book-card" style="width: 18rem; height: 430px;">
+            <img th:src="${card.coverUrl}" class="app-book-cover" style="width: 150px; height: 250px; margin: 5px auto"
                  alt="изображение книги">
-            <div class="card-body">
-                <h5 class="card-title text-light text-truncate-2-lines" th:text="*{card.title}"></h5>
-                <p class="card-text text-light" th:text="*{card.author}"></p>
-                <a th:id="*{card.id}" class="btn btn-light text-primary" th:href="@{~/book-info(id=${card.id})}">Подробнее</a>
+            <div class="mt-2 flex flex-1 flex-col">
+                <h5 class="app-card-title" th:text="${card.title}"></h5>
+                <p class="text-white/90" th:text="${card.author}"></p>
+                <a th:id="${card.id}" class="app-button-light" th:href="@{~/book-info(id=${card.id})}">Подробнее</a>
             </div>
         </div>
     </div>
 </div>
 
 <div th:if="${!pageData.hasElements()}">
-    <p class="text-center text-primary">Начатых книг не найдено</p>
+    <p class="text-center text-brand-700">Начатых книг не найдено</p>
 </div>
 
 <nav th:if="${pageData.hasElements()}">
-    <ul class="pagination justify-content-center my-5">
-        <li th:each="i : ${#numbers.sequence(0, pageData.totalPages - 1)}" class="page-item">
+    <ul class="app-pagination">
+        <li th:each="i : ${#numbers.sequence(0, pageData.totalPages - 1)}" class="">
             <a th:href="@{/user-panel(page=${i})}"
-               th:class="${i == pageData.currentPage} ? 'active page-link' : 'page-link'"
+               th:class="${i == pageData.currentPage} ? 'app-page-link-active' : 'app-page-link'"
                th:text="${i + 1}">
             </a>
         </li>
