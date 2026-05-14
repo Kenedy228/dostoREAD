@@ -1,0 +1,11 @@
+<script>
+  export let errors = [];
+</script>
+
+{#if errors?.length}
+  <div class="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm font-semibold text-red-700">
+    {#each errors as error}
+      <p>{error}</p>
+    {/each}
+  </div>
+{/if}

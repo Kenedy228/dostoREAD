@@ -1,13 +1,13 @@
 # dostoREAD
 
-dostoREAD is a Spring Boot web application for managing and reading EPUB books online. The project keeps the original Thymeleaf MVC stack and incrementally improves the codebase toward a cleaner DDD-oriented architecture.
+dostoREAD is a Spring Boot web application for managing and reading EPUB books online. The backend keeps the Spring Boot stack and exposes JSON APIs, while the client is now a Svelte single-page application styled with Tailwind CSS.
 
 ## Tech Stack
 
 - Java 21
 - Spring Boot 3.4.4
 - Spring Web, Spring Security, Spring Data JPA
-- Thymeleaf
+- Svelte, Vite and Tailwind CSS
 - PostgreSQL
 - MinIO
 - Spring Mail
@@ -33,27 +33,39 @@ src/main/java/com/example/demo
   domain/          pure business models, value objects, repository contracts
   application/     use-case/application services, commands and transaction boundaries
   infrastructure/  JPA entities/repositories, MinIO, mail, security, EPUB parsing, config
-  presentation/    Thymeleaf controllers, forms, validators and view models
+  presentation/    REST API controllers, SPA fallback, forms, validators and view models
 ```
 
-Domain classes do not depend on Spring, JPA, HTTP, MinIO or Thymeleaf. JPA entities are kept in `infrastructure.persistence.jpa.entity`, while controllers live in `presentation.web.controller`.
+Domain classes do not depend on Spring, JPA, HTTP, MinIO or frontend concerns. JPA entities are kept in `infrastructure.persistence.jpa.entity`, while API controllers live in `presentation.web.api`.
 
-## Tailwind CSS
+## Svelte Client
 
-Bootstrap CDN imports were removed. Tailwind is built locally from:
+The old Thymeleaf templates were replaced with a Svelte/Vite SPA. The client source is in:
 
-- `src/main/resources/static/css-src/app.css`
+- `src/main/frontend`
+- `src/main/frontend/src/components`
+- `src/main/frontend/src/pages`
+
+The production build is written to:
+
+- `src/main/resources/static/index.html`
+- `src/main/resources/static/assets`
+
+Tailwind CSS is loaded through Vite from:
+
+- `src/main/frontend/src/styles.css`
 - `tailwind.config.js`
 
 Commands:
 
 ```bash
 npm install
+npm run build
 npm run build:css
 npm run watch:css
 ```
 
-The compiled stylesheet is served as `/css/app.css`.
+`build:css` is kept as a compatibility script and runs the Vite production build.
 
 ## Configuration
 
@@ -100,7 +112,7 @@ Start PostgreSQL and MinIO locally, configure environment variables, then run:
 
 ```bash
 npm install
-npm run build:css
+npm run build
 ./mvnw spring-boot:run
 ```
 
@@ -120,6 +132,7 @@ Focused domain tests cover value object validation for book titles, email and re
 - Moved controllers/forms/validators/view models to presentation
 - Added domain value objects and repository contracts
 - Externalized MinIO, database and mail settings
-- Replaced Bootstrap templates with Tailwind-oriented styling
+- Replaced Thymeleaf templates with a Svelte SPA
+- Replaced Bootstrap UI with Tailwind-based Svelte components
 - Added Dockerfile, Docker Compose and `.env.example`
 - Updated `.gitignore`
