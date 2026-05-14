@@ -27,37 +27,37 @@
 </head>
 <body>
 
-<div class="settings container-fluid bg-primary">
-  <div class="d-md-flex justify-content-between my-3">
-    <div class="d-md-flex justify-content-between">
-      <p class="text-light my-auto pe-1">Шрифт</p>
-      <a th:class="'btn me-1 ' + ${font == 'Arial' ? 'btn-success' : 'btn-light'}" th:href="@{/read-book(bookID = ${bookID}, page=${currentPage}, font = 'Arial', screen = ${screen.ordinal()})}">Arial</a>
-      <a th:class="'btn me-1 ' + ${font == 'Times New Roman' ? 'btn-success' : 'btn-light'}" th:href="@{/read-book(bookID = ${bookID}, page=${currentPage}, font = 'Times New Roman', screen = ${screen.ordinal()})}">Times New Roman</a>
+<div class="settings w-full bg-brand-700">
+  <div class="md:flex justify-between my-4">
+    <div class="md:flex justify-between">
+      <p class="text-white my-auto pr-1">Шрифт</p>
+      <a th:class="'mr-1 inline-flex items-center rounded-md px-3 py-2 font-medium ' + ${font == 'Arial' ? 'bg-emerald-600 text-white' : 'bg-white text-brand-700'}" th:href="@{/read-book(bookID = ${bookID}, page=${currentPage}, font = 'Arial', screen = ${screen.ordinal()})}">Arial</a>
+      <a th:class="'mr-1 inline-flex items-center rounded-md px-3 py-2 font-medium ' + ${font == 'Times New Roman' ? 'bg-emerald-600 text-white' : 'bg-white text-brand-700'}" th:href="@{/read-book(bookID = ${bookID}, page=${currentPage}, font = 'Times New Roman', screen = ${screen.ordinal()})}">Times New Roman</a>
     </div>
-    <div class="d-md-flex">
-      <p class="text-light my-auto pe-1">Размер текста</p>
-      <a th:class="'btn me-1 ' + ${screen.ordinal() == 0 ? 'btn-success' : 'btn-light'}" th:href="@{/read-book(bookID = ${bookID}, page=${currentPage}, font = ${font}, screen = '0')}">Стандартный</a>
-      <a th:class="'btn me-1 ' + ${screen.ordinal() == 1 ? 'btn-success' : 'btn-light'}" th:href="@{/read-book(bookID = ${bookID}, page=${currentPage}, font = ${font}, screen = '1')}">Большой</a>
+    <div class="md:flex">
+      <p class="text-white my-auto pr-1">Размер текста</p>
+      <a th:class="'mr-1 inline-flex items-center rounded-md px-3 py-2 font-medium ' + ${screen.ordinal() == 0 ? 'bg-emerald-600 text-white' : 'bg-white text-brand-700'}" th:href="@{/read-book(bookID = ${bookID}, page=${currentPage}, font = ${font}, screen = '0')}">Стандартный</a>
+      <a th:class="'mr-1 inline-flex items-center rounded-md px-3 py-2 font-medium ' + ${screen.ordinal() == 1 ? 'bg-emerald-600 text-white' : 'bg-white text-brand-700'}" th:href="@{/read-book(bookID = ${bookID}, page=${currentPage}, font = ${font}, screen = '1')}">Большой</a>
     </div>
-    <div class="d-md-flex">
-      <a class="btn btn-light" th:href="@{/read-book/exit(bookID = ${bookID}, page = ${currentPage}, screen = ${screen.ordinal()})}">Выход</a>
+    <div class="md:flex">
+      <a class="app-button-light" th:href="@{/read-book/exit(bookID = ${bookID}, page = ${currentPage}, screen = ${screen.ordinal()})}">Выход</a>
     </div>
   </div>
 </div>
 
-<div class="page-content mx-auto my-3" th:style="'font-family: ' + ${font} + '; font-size: ' + ${screen.ordinal() == 0 ? '16px;' : '24px'}">
+<div class="page-content mx-auto my-4" th:style="'font-family: ' + ${font} + '; font-size: ' + ${screen.ordinal() == 0 ? '16px;' : '24px'}">
   <div th:each="line : ${bookPage}" class="page-line my-0">
     <p lang="ru" th:text="${line}" class="text my-0"></p>
   </div>
 </div>
 
-<div class="pagination mx-auto my-3">
-  <a class="btn btn-primary" th:if="${currentPage > 0}"
+<div class="app-pagination">
+  <a class="app-button" th:if="${currentPage > 0}"
      th:href="@{/read-book(bookID = ${bookID}, page=${currentPage - 1}, font = ${font}, screen = ${screen.ordinal()})}">Предыдущая</a>
 
-  <p class="text-primary my-auto mx-2" th:text="'Страница ' + ${currentPage + 1} + ' из ' + ${totalPages}"></p>
+  <p class="text-brand-700 my-auto mx-2" th:text="'Страница ' + ${currentPage + 1} + ' из ' + ${totalPages}"></p>
 
-  <a class="btn btn-primary" th:if="${currentPage < totalPages - 1}"
+  <a class="app-button" th:if="${currentPage < totalPages - 1}"
      th:href="@{/read-book(bookID = ${bookID}, page=${currentPage + 1}, font = ${font}, screen = ${screen.ordinal()})}">Следующая</a>
 </div>
 

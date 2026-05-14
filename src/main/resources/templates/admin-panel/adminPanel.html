@@ -10,17 +10,17 @@
 
 <div th:replace="~{components/navbar :: navbar}"></div>
 
-<section class="container">
-    <h1 class="h1 text-center text-primary my-5">Панель администратора</h1>
+<section class="app-container">
+    <h1 class="app-title">Панель администратора</h1>
 
-    <div class="list-group pb-5">
-        <p class="text-start text-primary fs-5">Администрирование учетных записей</p>
-        <a th:href="@{~/admin-panel/accounts/view}" class="list-group-item list-group-item-action">Учетные записи</a>
+    <div class="space-y-3 pb-8">
+        <p class="text-start text-brand-700 text-lg">Администрирование учетных записей</p>
+        <a th:href="@{~/admin-panel/accounts/view}" class="block rounded-lg-md border border-slate-200 bg-white px-4 py-3 text-brand-700 hover:bg-brand-50">Учетные записи</a>
     </div>
-    <div class="list-group pb-5">
-        <p class="text-start text-primary fs-5">Работа с книгами</p>
-        <a th:href="@{~/admin-panel/books/view}" class="list-group-item list-group-item-action">Просмотр и изменение книг</a>
-        <a th:href="@{~/admin-panel/books/create}" class="list-group-item list-group-item-action">Добавить книгу</a>
+    <div class="space-y-3 pb-8">
+        <p class="text-start text-brand-700 text-lg">Работа с книгами</p>
+        <a th:href="@{~/admin-panel/books/view}" class="block rounded-lg-md border border-slate-200 bg-white px-4 py-3 text-brand-700 hover:bg-brand-50">Просмотр и изменение книг</a>
+        <a th:href="@{~/admin-panel/books/create}" class="block rounded-lg-md border border-slate-200 bg-white px-4 py-3 text-brand-700 hover:bg-brand-50">Добавить книгу</a>
     </div>
 </section>
 

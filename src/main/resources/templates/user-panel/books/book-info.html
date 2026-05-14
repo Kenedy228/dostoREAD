@@ -9,28 +9,28 @@
 
 <div th:replace="~{components/navbar :: navbar}"></div>
 
-<h1 class="h1 text-center text-primary my-5">Информация о книге</h1>
+<h1 class="app-title">Информация о книге</h1>
 
 
-<div class="d-md-flex align-items-center container-fluid" th:object="${book}">
-    <div class="col-md-3 mb-3">
-        <img th:src="${cover}" alt="Обложка книги" class="d-block mx-auto my-auto">
+<div class="md:flex items-center w-full">
+    <div class="md:w-1/4 mb-4">
+        <img th:src="${book.coverUrl()}" alt="Обложка книги" class="block mx-auto my-auto">
     </div>
     <div>
-        <p class="text-justify text-primary" th:text="'Название: ' + *{title}"></p>
-        <p class="text-justify text-primary" th:text="'Автор: ' + *{author}">Автор книги</p>
-        <p class="text-justify text-primary" th:text="*{description}"></p>
-        <p class="text-justify text-primary">Жанры:</p>
-        <div class="d-flex align-items-start">
-            <p th:each="genre : *{genres}" th:text="${genre.name}"
-               class="bg-light border border-primary me-2 p-2 text-primary rounded"></p>
+        <p class="text-justify text-brand-700" th:text="'Название: ' + ${book.title()}"></p>
+        <p class="text-justify text-brand-700" th:text="'Автор: ' + ${book.author()}">Автор книги</p>
+        <p class="text-justify text-brand-700" th:text="${book.description()}"></p>
+        <p class="text-justify text-brand-700">Жанры:</p>
+        <div class="flex items-start">
+            <p th:each="genre : ${book.genreNames()}" th:text="${genre}"
+               class="bg-brand-50 border border-brand-700 mr-2 p-2 text-brand-700 rounded-lg"></p>
         </div>
-        <p class="text-justify text-primary" th:text="'Ограничение по возрасту: ' + *{ageRestriction.code}"></p>
-        <p class="text-justify text-primary" th:text="'Количество страниц: ' + *{pageCount}"></p>
-        <p class="text-justify text-primary" th:text="'Лицензия: ' + *{license}">Лицензия книги</p>
-        <p class="text-justify text-primary" th:text="'Дата публикования: ' + *{publishDate}">Дата публикования</p>
-        <p class="text-justify text-primary" th:text="'Издательство: ' + *{publisher}">Издательство</p>
-        <a class="btn btn-primary" th:href="@{/read-book(bookID = ${book.id}, page = ${page}, screen = ${screen})}">Читать</a>
+        <p class="text-justify text-brand-700" th:text="'Ограничение по возрасту: ' + ${book.ageRestrictionCode()}"></p>
+        <p class="text-justify text-brand-700" th:text="'Количество страниц: ' + ${book.pageCount()}"></p>
+        <p class="text-justify text-brand-700" th:text="'Лицензия: ' + ${book.license()}">Лицензия книги</p>
+        <p class="text-justify text-brand-700" th:text="'Дата публикования: ' + ${book.publishDate()}">Дата публикования</p>
+        <p class="text-justify text-brand-700" th:text="'Издательство: ' + ${book.publisher()}">Издательство</p>
+        <a class="app-button" th:href="@{/read-book(bookID = ${book.id()}, page = ${page}, screen = ${screen})}">Читать</a>
     </div>
 </div>
 
