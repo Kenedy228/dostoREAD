@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://postgres:5432/dostoread}
+    username: ${DB_USERNAME:dostoread}
+    password: ${DB_PASSWORD:dostoread}
+  mail:
+    host: ${MAIL_HOST:mailpit}
+    port: ${MAIL_PORT:1025}
+
+app:
+  minio:
+    endpoint: ${MINIO_ENDPOINT:http://minio:9000}

@@ -1,0 +1,17 @@
+target/
+node_modules/
+dist/
+logs/
+*.log
+
+.git/
+.idea/
+.vscode/
+
+.env
+.env.*
+!.env.example
+
+README.md
+AGENTS.md
+src/main/java/com/example/demo/AGENTS.md
